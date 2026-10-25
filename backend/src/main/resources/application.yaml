@@ -3,8 +3,8 @@ server:
 
 spring:
   application:
-    name: Photo_Gallery_Application
+    name: Photo_Gallery
 
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/photo_gallery}
+      uri: ${mongodb+srv://harshparjapat7738_db_user:CZBUHpvkzDsTaXkH@cluster0.5u3uwvy.mongodb.net/photo_gallery}

@@ -3,7 +3,6 @@ package com.photo.gallery.service;
 import com.photo.gallery.model.User;
 import com.photo.gallery.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import java.util.LinkedHashMap;
 @RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
     private final UserRepo userRepo;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
