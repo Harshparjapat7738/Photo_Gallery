@@ -34,23 +34,22 @@ A full-stack photo gallery where members can create albums, upload photos, brows
 
 ## Project layout
 
-The frontend is nested inside the Spring Boot project. It is a separate Vite application and is built independently from the backend.
+The frontend and backend are independent projects in sibling directories.
 
 ```text
 Photo_Gallery/
 ├── README.md
-└── Photo_Gallery_Application/
-    ├── pom.xml
-    ├── mvnw
-    ├── mvnw.cmd
-    ├── src/
-    │   ├── main/java/com/photo/gallery/
-    │   └── main/resources/
-    └── frontend/
-        ├── package.json
-        ├── package-lock.json
-        ├── vite.config.js
-        └── src/
+├── backend/
+│   ├── pom.xml
+│   ├── mvnw
+│   └── src/
+│       ├── main/java/com/photo/gallery/
+│       └── main/resources/
+└── frontend/
+    ├── package.json
+    ├── package-lock.json
+    ├── vite.config.js
+    └── src/
 ```
 
 ## Requirements
@@ -92,7 +91,7 @@ Open two terminals from the repository root.
 ### 1. Start the backend
 
 ```powershell
-cd .\Photo_Gallery_Application
+cd .\backend
 $env:SPRING_DATA_MONGODB_URI = "mongodb+srv://<username>:<password>@<cluster>/<database>"
 .\mvnw.cmd spring-boot:run
 ```
@@ -102,7 +101,7 @@ The backend is available at `http://localhost:8091`.
 ### 2. Start the frontend
 
 ```powershell
-cd .\Photo_Gallery_Application\frontend
+cd .\frontend
 npm ci
 $env:VITE_API_BASE = "http://localhost:8091"
 npm run dev
@@ -117,22 +116,23 @@ Run these commands from the repository root.
 ### Backend tests
 
 ```powershell
-cd .\Photo_Gallery_Application
+cd .\backend
 .\mvnw.cmd clean test
 ```
 
 ### Backend package
 
 ```powershell
+cd .\backend
 .\mvnw.cmd package
 ```
 
-The executable Spring Boot JAR is written under `Photo_Gallery_Application\target`.
+The executable Spring Boot JAR is written under `backend\target`.
 
 ### Frontend production build
 
 ```powershell
-cd .\Photo_Gallery_Application\frontend
+cd .\frontend
 $env:VITE_API_BASE = "https://api.example.com"
 npm ci
 npm run build
@@ -154,15 +154,14 @@ All routes above are relative to the `/jsonplaceholder.typicode.com` prefix. Mut
 
 ## Deployment notes
 
-The frontend and backend may be deployed separately even though the frontend directory lives inside the backend project.
+The frontend and backend are separate projects and can be deployed independently.
 
 ### Build and run the backend with Docker
 
-Build the image from the backend directory:
+Build the image from the repository root:
 
 ```powershell
-cd .\Photo_Gallery_Application
-docker build -t photo-gallery-backend .
+docker build -t photo-gallery-backend .\backend
 ```
 
 Run it with a MongoDB connection string and a persistent volume for uploaded images:
@@ -184,4 +183,4 @@ Before deploying:
 3. Serve the frontend with SPA fallback routing so direct visits and refreshes on routes such as `/albums/{id}` resolve to `index.html`.
 4. Keep MongoDB credentials in the deployment environment or secret manager.
 5. Configure session cookies and CORS for the production domains. Cross-origin cookie sessions require a compatible same-site/secure cookie policy and HTTPS.
-6. Move uploaded images to persistent storage suitable for the hosting platform. The current backend saves uploads under `src/main/resources/static/images` and constructs image URLs using `http://localhost:8091`, which is intended for local development and should be changed for production.
+6. Move uploaded images to persistent storage suitable for the hosting platform. The backend saves uploads under `backend/src/main/resources/static/images` and constructs image URLs using `http://localhost:8091`, which is intended for local development and should be changed for production.

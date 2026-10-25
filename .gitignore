@@ -1,0 +1,15 @@
+HELP.md
+
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+.idea/
+**/.idea/
+*.iws
+*.iml
+*.ipr
+
+node_modules/
+dist/
+
+/backend/src/main/resources/application-local.yaml

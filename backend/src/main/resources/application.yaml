@@ -1,0 +1,10 @@
+server:
+  port: ${SERVER_PORT:8091}
+
+spring:
+  application:
+    name: Photo_Gallery_Application
+
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/photo_gallery}
