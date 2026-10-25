@@ -156,6 +156,27 @@ All routes above are relative to the `/jsonplaceholder.typicode.com` prefix. Mut
 
 The frontend and backend may be deployed separately even though the frontend directory lives inside the backend project.
 
+### Build and run the backend with Docker
+
+Build the image from the backend directory:
+
+```powershell
+cd .\Photo_Gallery_Application
+docker build -t photo-gallery-backend .
+```
+
+Run it with a MongoDB connection string and a persistent volume for uploaded images:
+
+```powershell
+docker run --name photo-gallery-backend `
+  -p 8091:8091 `
+  -e SPRING_DATA_MONGODB_URI="mongodb+srv://<username>:<password>@<cluster>/<database>" `
+  -v photo-gallery-uploads:/app/src/main/resources/static/images `
+  photo-gallery-backend
+```
+
+The container runs as a non-root user and listens on port `8091`. Keep the MongoDB URI in your deployment platform's secret manager rather than in the image or source control.
+
 Before deploying:
 
 1. Configure `VITE_API_BASE` to the public API URL before building the frontend.
@@ -164,4 +185,3 @@ Before deploying:
 4. Keep MongoDB credentials in the deployment environment or secret manager.
 5. Configure session cookies and CORS for the production domains. Cross-origin cookie sessions require a compatible same-site/secure cookie policy and HTTPS.
 6. Move uploaded images to persistent storage suitable for the hosting platform. The current backend saves uploads under `src/main/resources/static/images` and constructs image URLs using `http://localhost:8091`, which is intended for local development and should be changed for production.
-
