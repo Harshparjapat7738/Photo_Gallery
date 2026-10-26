@@ -56,7 +56,7 @@ public class PhotoController {
                 Path filePath = Paths.get(UPLOAD_DIR, savedFileName);
                 Files.write(filePath, file.getBytes());
 
-                String imageUrl = "http://localhost:8091/images/" + savedFileName;
+                String imageUrl = "https://photo-gallery-2-j186.onrender.com/images/" + savedFileName;
 
                 Photo photo = new Photo();
                 photo.setAlbumId(albumId);

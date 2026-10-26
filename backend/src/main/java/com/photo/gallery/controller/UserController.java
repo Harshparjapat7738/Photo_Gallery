@@ -71,7 +71,7 @@ public class UserController {
                 Path filePath = Paths.get(UPLOAD_DIR, savedFileName);
                 Files.write(filePath, profilePicture.getBytes());
 
-                user.setProfilePicture("http://localhost:8091/images/" + savedFileName);
+                user.setProfilePicture("https://photo-gallery-2-j186.onrender.com/images/" + savedFileName);
             }
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
