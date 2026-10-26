@@ -1,3 +1,4 @@
+
 server:
   port: ${SERVER_PORT:8091}
 
@@ -5,17 +6,12 @@ spring:
   application:
     name: Photo_Gallery
 
-  # PostgreSQL - primary database via Render DATABASE_URL environment variable.
-  # Render sets DATABASE_URL automatically for managed PostgreSQL databases
-  # (postgres:// or jdbc:postgresql:// form). Provide DB_USERNAME / DB_PASSWORD
-  # separately in the Render service environment. No defaults: without
-  # DATABASE_URL no DataSource is configured, so local builds/tests fall back
-  # to the embedded H2 test database. Credentials are never hardcoded.
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:student}
+    url: jdbc:postgresql://ep-lingering-star-b8g3ms6w-pooler.c-14.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+    username: ${DB_USERNAME:neondb_owner}
+    password: ${DB_PASSWORD:npg_mIlqOS2nD4xL}
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
