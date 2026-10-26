@@ -5,6 +5,18 @@ spring:
   application:
     name: Photo_Gallery
 
-  data:
-    mongodb:
-      uri: ${mongodb+srv://harshparjapat7738_db_user:CZBUHpvkzDsTaXkH@cluster0.5u3uwvy.mongodb.net/photo_gallery}
+  # PostgreSQL - primary database (Render DATABASE_URL environment variable).
+  # Render sets DATABASE_URL automatically for managed PostgreSQL databases.
+  # Locally (and in tests) it falls back to an embedded H2 database so the
+  # application context loads without a real PostgreSQL instance.
+  # Provide DB_USERNAME / DB_PASSWORD separately for Render. Credentials are
+  # never hardcoded.
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:student}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false

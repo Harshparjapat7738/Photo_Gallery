@@ -8,16 +8,21 @@ import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
-@Document(collection = "users")
+@Entity
+@Table(name = "users")
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String userId;
 
     @NotNull(message = "Name is required")

@@ -1,11 +1,11 @@
 package com.photo.gallery.repository;
 
 import com.photo.gallery.model.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepo extends MongoRepository<User, String> {
+public interface UserRepo extends JpaRepository<User, String> {
 
     User findByEmailIgnoreCase(String email);
 

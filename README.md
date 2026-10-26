@@ -21,7 +21,7 @@ A full-stack photo gallery where members can create albums, upload photos, brows
 - User-owned album creation and management.
 - Photo upload and owner-only photo and album deletion.
 - Full-screen photo viewing with previous/next navigation and keyboard controls.
-- MongoDB persistence for user, album, and photo records.
+- PostgreSQL persistence for user, album, and photo records.
 
 ## Technology
 
@@ -29,7 +29,7 @@ A full-stack photo gallery where members can create albums, upload photos, brows
 | --- | --- |
 | Frontend | React 18, Vite, React Router, Tailwind CSS |
 | Backend | Java 21, Spring Boot, Spring MVC |
-| Database | MongoDB |
+| Database | PostgreSQL |
 | Authentication | HTTP session cookies |
 
 ## Project layout
@@ -56,18 +56,20 @@ Photo_Gallery/
 
 - Java 21 or later.
 - Node.js and npm (Node.js 18 or later is recommended for Vite 5).
-- A reachable MongoDB database.
+- A reachable PostgreSQL database (an embedded H2 database is used locally when `DATABASE_URL` is unset).
 
 ## Configuration
 
 ### Backend
 
-The backend listens on port `8091` by default. Configure its MongoDB connection using the `SPRING_DATA_MONGODB_URI` environment variable. Do not commit database credentials or production secrets.
+The backend listens on port `8091` by default. Configure its PostgreSQL connection using the `DATABASE_URL` environment variable (Render sets this automatically for managed PostgreSQL databases), with optional `DB_USERNAME` and `DB_PASSWORD`. Locally, the backend falls back to an embedded H2 database when `DATABASE_URL` is unset, so no local PostgreSQL is required for development. Do not commit database credentials or production secrets.
 
 PowerShell example:
 
 ```powershell
-$env:SPRING_DATA_MONGODB_URI = "mongodb+srv://<username>:<password>@<cluster>/<database>"
+$env:DATABASE_URL = "jdbc:postgresql://<host>:<port>/<database>"
+$env:DB_USERNAME = "<username>"
+$env:DB_PASSWORD = "<password>"
 ```
 
 The connection string must be URL-encoded where required. Keep credentials out of source control and terminal logs.
@@ -92,9 +94,13 @@ Open two terminals from the repository root.
 
 ```powershell
 cd .\backend
-$env:SPRING_DATA_MONGODB_URI = "mongodb+srv://<username>:<password>@<cluster>/<database>"
+$env:DATABASE_URL = "jdbc:postgresql://<host>:<port>/<database>"
+$env:DB_USERNAME = "<username>"
+$env:DB_PASSWORD = "<password>"
 .\mvnw.cmd spring-boot:run
 ```
+
+Omitting `DATABASE_URL` falls back to an embedded H2 database for local development.
 
 The backend is available at `http://localhost:8091`.
 
@@ -164,23 +170,25 @@ Build the image from the repository root:
 docker build -t photo-gallery-backend .\backend
 ```
 
-Run it with a MongoDB connection string and a persistent volume for uploaded images:
+Run it with a PostgreSQL connection string and a persistent volume for uploaded images:
 
 ```powershell
 docker run --name photo-gallery-backend `
   -p 8091:8091 `
-  -e SPRING_DATA_MONGODB_URI="mongodb+srv://<username>:<password>@<cluster>/<database>" `
+  -e DATABASE_URL="jdbc:postgresql://<host>:<port>/<database>" `
+  -e DB_USERNAME="<username>" `
+  -e DB_PASSWORD="<password>" `
   -v photo-gallery-uploads:/app/src/main/resources/static/images `
   photo-gallery-backend
 ```
 
-The container runs as a non-root user and listens on port `8091`. Keep the MongoDB URI in your deployment platform's secret manager rather than in the image or source control.
+The container runs as a non-root user and listens on port `8091`. Keep the database credentials in your deployment platform's secret manager rather than in the image or source control.
 
 Before deploying:
 
 1. Configure `VITE_API_BASE` to the public API URL before building the frontend.
 2. Update the allowed frontend origin in `SecurityConfig.java`; it currently permits `http://localhost:5173`.
 3. Serve the frontend with SPA fallback routing so direct visits and refreshes on routes such as `/albums/{id}` resolve to `index.html`.
-4. Keep MongoDB credentials in the deployment environment or secret manager.
+4. Keep database credentials in the deployment environment or secret manager.
 5. Configure session cookies and CORS for the production domains. Cross-origin cookie sessions require a compatible same-site/secure cookie policy and HTTPS.
 6. Move uploaded images to persistent storage suitable for the hosting platform. The backend saves uploads under `backend/src/main/resources/static/images` and constructs image URLs using `http://localhost:8091`, which is intended for local development and should be changed for production.
