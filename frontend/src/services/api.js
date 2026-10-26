@@ -1,4 +1,10 @@
-export const API_BASE = import.meta.env.VITE_API_BASE || 'https://photo-gallery-2-j186.onrender.com';
+const DEFAULT_API_BASE = 'https://photo-gallery-2-j186.onrender.com'
+const configuredApiBase = import.meta.env.VITE_API_BASE?.trim()
+const isLocalApiBase = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(?:\/|$)/i.test(configuredApiBase || '')
+
+export const API_BASE = configuredApiBase && !(import.meta.env.PROD && isLocalApiBase)
+  ? configuredApiBase
+  : DEFAULT_API_BASE
 
 export const api = {
   users: {
