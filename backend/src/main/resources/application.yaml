@@ -1,6 +1,11 @@
 
 server:
   port: ${SERVER_PORT:8091}
+  servlet:
+    session:
+      cookie:
+        same-site: none
+        secure: true
 
 spring:
   application:
