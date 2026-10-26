@@ -1,4 +1,4 @@
-export const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8091';
+export const API_BASE = import.meta.env.VITE_API_BASE || 'https://photo-gallery-2-j186.onrender.com';
 
 export const api = {
   users: {
