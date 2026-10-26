@@ -5,16 +5,17 @@ spring:
   application:
     name: Photo_Gallery
 
-  # PostgreSQL - primary database (Render DATABASE_URL environment variable).
-  # Render sets DATABASE_URL automatically for managed PostgreSQL databases.
-  # Locally (and in tests) it falls back to an embedded H2 database so the
-  # application context loads without a real PostgreSQL instance.
-  # Provide DB_USERNAME / DB_PASSWORD separately for Render. Credentials are
-  # never hardcoded.
+  # PostgreSQL - primary database via Render DATABASE_URL environment variable.
+  # Render sets DATABASE_URL automatically for managed PostgreSQL databases
+  # (postgres:// or jdbc:postgresql:// form). Provide DB_USERNAME / DB_PASSWORD
+  # separately in the Render service environment. No defaults: without
+  # DATABASE_URL no DataSource is configured, so local builds/tests fall back
+  # to the embedded H2 test database. Credentials are never hardcoded.
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:student}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
