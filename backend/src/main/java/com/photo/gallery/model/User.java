@@ -1,18 +1,16 @@
 package com.photo.gallery.model;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Generated;
-import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
@@ -25,13 +23,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String userId;
 
-    @NotNull(message = "Name is required")
+    @NotBlank(message = "Name is required")
     private String name;
 
-    @NotNull(message = "User Name is required")
+    @NotBlank(message = "User Name is required")
     private String userName;
 
-    @NotNull(message = "Email is required")
+    @NotBlank(message = "Email is required")
     @Email(message = "Enter a valid email address")
     private String email;
 
@@ -40,6 +38,4 @@ public class User {
     private String password;
 
     private String profilePicture;
-
-
 }

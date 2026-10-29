@@ -1,6 +1,6 @@
 # Photo Gallery
 
-A full-stack photo gallery where members can create albums, upload photos, browse the community, and view images in a full-screen viewer.
+A full-stack photo gallery for browsing seeded users, albums, and photos.
 
 ## Contents
 
@@ -16,11 +16,8 @@ A full-stack photo gallery where members can create albums, upload photos, brows
 
 ## Features
 
-- Community page with member profiles and album discovery.
-- Account registration and sign-in backed by server-side sessions.
-- User-owned album creation and management.
-- Photo upload and owner-only photo and album deletion.
-- Full-screen photo viewing with previous/next navigation and keyboard controls.
+- Browse five demo users and their albums.
+- View album photos in a responsive gallery and full-screen viewer.
 - PostgreSQL persistence for user, album, and photo records.
 
 ## Technology
@@ -30,7 +27,6 @@ A full-stack photo gallery where members can create albums, upload photos, brows
 | Frontend | React 18, Vite, React Router, Tailwind CSS |
 | Backend | Java 21, Spring Boot, Spring MVC |
 | Database | PostgreSQL |
-| Authentication | HTTP session cookies |
 
 ## Project layout
 
@@ -56,13 +52,13 @@ Photo_Gallery/
 
 - Java 21 or later.
 - Node.js and npm (Node.js 18 or later is recommended for Vite 5).
-- A reachable PostgreSQL database (an embedded H2 database is used locally when `DATABASE_URL` is unset).
+- A reachable PostgreSQL database.
 
 ## Configuration
 
 ### Backend
 
-The backend listens on port `8091` by default. Configure its PostgreSQL connection using the `DATABASE_URL` environment variable (Render sets this automatically for managed PostgreSQL databases), with optional `DB_USERNAME` and `DB_PASSWORD`. Locally, the backend falls back to an embedded H2 database when `DATABASE_URL` is unset, so no local PostgreSQL is required for development. Do not commit database credentials or production secrets.
+The backend listens on port `8091` by default. Configure its PostgreSQL connection using the `DATABASE_URL`, `DB_USERNAME`, and `DB_PASSWORD` environment variables. All three are required; keep credentials out of source control and terminal logs.
 
 PowerShell example:
 
@@ -99,8 +95,6 @@ $env:DB_USERNAME = "<username>"
 $env:DB_PASSWORD = "<password>"
 .\mvnw.cmd spring-boot:run
 ```
-
-Omitting `DATABASE_URL` falls back to an embedded H2 database for local development.
 
 The backend is available at `http://localhost:8091`.
 
@@ -150,15 +144,15 @@ Vite writes the static production bundle to `frontend\dist`.
 
 The backend API uses the `/jsonplaceholder.typicode.com` path prefix.
 
-| Resource | Example routes |
+| Resource | GET routes |
 | --- | --- |
-| Users | `POST /users`, `POST /users/login`, `POST /users/logout`, `GET /users/me`, `GET /users` |
-| Albums | `POST /album`, `GET /album/user/{userId}`, `GET /album/{id}`, `DELETE /album/{id}` |
-| Photos | `POST /photo/album/{albumId}/upload`, `GET /photo/album/{albumId}`, `DELETE /photo/{id}` |
+| Users | `/jsonplaceholder.typicode.com/users` |
+| Albums | `/jsonplaceholder.typicode.com/album`, `/jsonplaceholder.typicode.com/album/user/{userId}`, `/jsonplaceholder.typicode.com/album/{id}` |
+| Photos | `/jsonplaceholder.typicode.com/photo/album/{albumId}`, `/jsonplaceholder.typicode.com/photo/{id}` |
 
-All routes above are relative to the `/jsonplaceholder.typicode.com` prefix. Mutating album and photo routes require a signed-in session; album mutations are restricted to the album owner. The frontend sends requests with credentials enabled so the session cookie is included.
+These are read-only gallery endpoints; account, upload, and mutation endpoints are not implemented.
 
-On first startup, the backend creates five demo users with three albums each and at least 15 sample photos per album. The sample photo URLs refer to images in `frontend/public/images`, which Vite serves from the frontend origin. The seed is safe to run on later startups: existing demo users, albums, and photos are reused rather than duplicated.
+On startup, the backend ensures five demo users have three albums each and at least 15 sample photos per album. The sample photo URLs refer to images in `frontend/public/images`, which Vite serves from the frontend origin. The seed is safe to run on later startups: existing demo users, albums, and photos are reused rather than duplicated.
 
 ## Deployment notes
 
@@ -188,8 +182,7 @@ The container runs as a non-root user and listens on port `8091`. Keep the datab
 Before deploying:
 
 1. Configure `VITE_API_BASE` to the public API URL before building the frontend.
-2. Update the allowed frontend origin in `SecurityConfig.java`; it currently permits `http://localhost:5173`.
+2. Update the allowed frontend origin in `CorsConfig.java`; it currently permits `http://localhost:5173`.
 3. Serve the frontend with SPA fallback routing so direct visits and refreshes on routes such as `/albums/{id}` resolve to `index.html`.
 4. Keep database credentials in the deployment environment or secret manager.
-5. Configure session cookies and CORS for the production domains. Cross-origin cookie sessions require a compatible same-site/secure cookie policy and HTTPS.
-6. The demo gallery images are served by the frontend from `frontend/public/images`; the backend does not serve or store gallery image files.
+5. The demo gallery images are served by the frontend from `frontend/public/images`; the backend does not serve or store gallery image files.

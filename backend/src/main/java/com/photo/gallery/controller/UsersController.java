@@ -15,10 +15,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsersController {
 
+    private static final List<String> DEMO_USER_EMAILS = List.of(
+            "avery.stone@demo.example",
+            "jordan.lee@demo.example",
+            "morgan.patel@demo.example",
+            "riley.chen@demo.example",
+            "taylor.brooks@demo.example"
+    );
+
     private final UserRepo userRepo;
 
+    /** Returns the five demo users shown in the gallery. */
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userRepo.findByEmailEndingWithIgnoreCase("@demo.example"));
+        return ResponseEntity.ok(userRepo.findByEmailIn(DEMO_USER_EMAILS));
     }
 }

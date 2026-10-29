@@ -91,17 +91,7 @@ public class DemoDataInitializer implements CommandLineRunner {
             new SeedUser("Jordan Lee", "jordan.lee", "jordan.lee@demo.example"),
             new SeedUser("Morgan Patel", "morgan.patel", "morgan.patel@demo.example"),
             new SeedUser("Riley Chen", "riley.chen", "riley.chen@demo.example"),
-            new SeedUser("Taylor Brooks", "taylor.brooks", "taylor.brooks@demo.example"),
-            new SeedUser("Casey Morgan", "casey.morgan", "casey.morgan@demo.example"),
-            new SeedUser("Jamie Rivera", "jamie.rivera", "jamie.rivera@demo.example"),
-            new SeedUser("Alex Kim", "alex.kim", "alex.kim@demo.example"),
-            new SeedUser("Drew Parker", "drew.parker", "drew.parker@demo.example"),
-            new SeedUser("Samira Khan", "samira.khan", "samira.khan@demo.example"),
-            new SeedUser("Cameron Blake", "cameron.blake", "cameron.blake@demo.example"),
-            new SeedUser("Noah Bennett", "noah.bennett", "noah.bennett@demo.example"),
-            new SeedUser("Emery Wilson", "emery.wilson", "emery.wilson@demo.example"),
-            new SeedUser("Skyler James", "skyler.james", "skyler.james@demo.example"),
-            new SeedUser("Robin Das", "robin.das", "robin.das@demo.example")
+            new SeedUser("Taylor Brooks", "taylor.brooks", "taylor.brooks@demo.example")
     );
 
     private final UserRepo userRepo;
@@ -109,6 +99,7 @@ public class DemoDataInitializer implements CommandLineRunner {
     private final PhotoRepo photoRepo;
     private final PasswordEncoder passwordEncoder;
 
+    /** Creates missing demo users, albums, and sample photos without duplicating existing records. */
     @Override
     public void run(String... args) {
         List<String> randomizedImages = new ArrayList<>(IMAGE_FILES);
