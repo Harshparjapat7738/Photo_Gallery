@@ -12,7 +12,7 @@ spring:
     name: Photo_Gallery
 
   datasource:
-    url: jdbc:postgresql://ep-lingering-star-b8g3ms6w-pooler.c-14.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+    url: jdbc:postgresql://ep-polished-cell-b8js65hm-pooler.c-14.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
     username: ${DB_USERNAME:neondb_owner}
     password: ${DB_PASSWORD:npg_mIlqOS2nD4xL}
     driver-class-name: org.postgresql.Driver

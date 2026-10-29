@@ -38,7 +38,7 @@ class PhotoGalleryApplicationTests {
     }
 
     @Test
-    void seedsFiveUsersWithThreeAlbumsAndPhotosWithoutDuplicates() throws Exception {
+    void seedsFifteenUsersWithThreeAlbumsAndPhotosWithoutDuplicates() throws Exception {
         assertSeededGallery();
 
         demoDataInitializer.run();
@@ -48,7 +48,7 @@ class PhotoGalleryApplicationTests {
 
     @Test
     void usersEndpointReturnsOnlySeededUsers() {
-        Assertions.assertEquals(5, usersController.getAllUsers().getBody().size());
+        Assertions.assertEquals(15, usersController.getAllUsers().getBody().size());
     }
 
     @Test
@@ -98,15 +98,15 @@ class PhotoGalleryApplicationTests {
         List<User> demoUsers = userRepo.findAll().stream()
                 .filter(user -> user.getEmail().endsWith("@demo.example"))
                 .toList();
-        Assertions.assertEquals(5, demoUsers.size());
+        Assertions.assertEquals(15, demoUsers.size());
         Assertions.assertTrue(demoUsers.stream()
                 .allMatch(user -> user.getProfilePicture().startsWith("/images/")));
 
         List<Album> albums = demoUsers.stream()
                 .flatMap(user -> albumRepo.findByUserId(user.getUserId()).stream())
                 .toList();
-        Assertions.assertEquals(15, albums.size());
-        Assertions.assertEquals(225, photoRepo.count());
+        Assertions.assertEquals(45, albums.size());
+        Assertions.assertEquals(675, photoRepo.count());
 
         for (Album album : albums) {
             var photos = photoRepo.findByAlbumId(album.getAlbumId());
