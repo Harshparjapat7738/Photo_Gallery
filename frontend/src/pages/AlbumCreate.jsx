@@ -2,23 +2,12 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { ArrowLeft, Folder, Image, Plus, Camera, Image as ImageIcon } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
 import { api } from '../services/api'
 
 export default function AlbumCreate() {
-  const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({ albumName: '', description: '' })
   const [loading, setLoading] = useState(false)
-
-  const handleLogout = async () => {
-    try {
-      await logout()
-      navigate('/login')
-    } catch (err) {
-      toast.error(err.message || 'Could not sign out')
-    }
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -31,7 +20,6 @@ export default function AlbumCreate() {
       const res = await api.albums.create({
         albumName: formData.albumName,
         description: formData.description,
-        userId: user?.userId,
         createdAt: new Date().toISOString(),
       })
       if (!res.ok) throw new Error('Failed to create album')
@@ -49,19 +37,11 @@ export default function AlbumCreate() {
     <div className="min-h-screen bg-secondary/30">
       <nav className="glass-panel sticky top-0 z-40 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-muted-foreground hover:text-primary-600 transition-colors">
-            <ArrowLeft size={20} strokeWidth={2} /> Back to Albums
-          </button>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground hidden sm:block">
-              Welcome, {user?.name || user?.userName}
-            </span>
-            <button onClick={handleLogout} className="px-4 py-2 bg-destructive/10 text-destructive rounded-lg text-sm font-medium hover:bg-destructive/20 transition-colors">
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </nav>
+           <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-muted-foreground hover:text-primary-600 transition-colors">
+             <ArrowLeft size={20} strokeWidth={2} /> Back to Albums
+           </button>
+         </div>
+       </nav>
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="glass-panel rounded-2xl p-8 shadow-xl border border-border">

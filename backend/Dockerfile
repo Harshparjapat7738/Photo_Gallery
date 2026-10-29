@@ -14,7 +14,6 @@ WORKDIR /app
 
 RUN groupadd --system --gid 10001 app \
     && useradd --system --uid 10001 --gid app --home-dir /app app \
-    && mkdir -p /app/src/main/resources/static/images \
     && chown -R app:app /app
 
 COPY --from=build --chown=app:app /workspace/target/Photo_Gallery_Application-*.jar /app/app.jar

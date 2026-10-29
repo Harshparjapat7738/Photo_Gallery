@@ -27,8 +27,8 @@ public class PhotoService {
     private AlbumService albumService;
 
     // Upload/Add Photo to Album
-    public Photo addPhotoToAlbum(String albumId, Photo photo, String userId) {
-        Album album = albumService.getOwnedAlbum(albumId, userId);
+    public Photo addPhotoToAlbum(String albumId, Photo photo) {
+        Album album = albumService.getOwnedAlbum(albumId);
 
         photo.setAlbumId(albumId);
         photo.setCreatedAt(Instant.now());
@@ -59,10 +59,9 @@ public class PhotoService {
     }
 
     // Update Photo
-    public Photo updatePhoto(String photoId, Photo updatedPhoto, String userId) {
+    public Photo updatePhoto(String photoId, Photo updatedPhoto) {
         Photo existingPhoto = photoRepo.findById(photoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Photo not found"));
-        albumService.getOwnedAlbum(existingPhoto.getAlbumId(), userId);
 
         existingPhoto.setImageTitle(updatedPhoto.getImageTitle());
         existingPhoto.setImageDescription(updatedPhoto.getImageDescription());
@@ -74,10 +73,9 @@ public class PhotoService {
     }
 
     // Delete Photo
-    public Photo deletePhoto(String photoId, String userId) {
+    public Photo deletePhoto(String photoId) {
         Photo photo = photoRepo.findById(photoId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Photo not found"));
-        albumService.getOwnedAlbum(photo.getAlbumId(), userId);
 
         String albumId = photo.getAlbumId();
         String photoUrl = photo.getImageUrl();

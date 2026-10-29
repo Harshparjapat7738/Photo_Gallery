@@ -11,17 +11,19 @@ export default function UserAlbums() {
   const { user } = useAuth()
   const [albums, setAlbums] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const isOwner = user?.userId === userId
 
   const fetchUserAlbums = useCallback(async () => {
     setLoading(true)
+    setError('')
     try {
       const response = await api.albums.getByUser(userId)
       if (!response.ok) throw new Error('Could not load albums. Please try again.')
       const data = await response.json()
       setAlbums(Array.isArray(data) ? data : [])
     } catch (error) {
-      toast.error(error.message || 'Failed to load albums')
+      setError(error.message || 'Failed to load albums')
     } finally {
       setLoading(false)
     }
@@ -84,7 +86,19 @@ export default function UserAlbums() {
           </div>
         </header>
 
-        {albums.length === 0 ? (
+        {error ? (
+          <div className="rounded-2xl border border-rose-200 bg-background p-8 text-center shadow-sm">
+            <h2 className="text-lg font-semibold text-foreground">Albums unavailable</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{error}</p>
+            <button
+              type="button"
+              onClick={fetchUserAlbums}
+              className="mt-5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              Try again
+            </button>
+          </div>
+        ) : albums.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-background px-6 py-16 text-center">
             <Folder size={48} strokeWidth={1.5} className="mx-auto mb-4 text-muted-foreground opacity-50" />
             <h2 className="text-lg font-semibold text-foreground">No albums yet</h2>

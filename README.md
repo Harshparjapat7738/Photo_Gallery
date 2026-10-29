@@ -158,6 +158,8 @@ The backend API uses the `/jsonplaceholder.typicode.com` path prefix.
 
 All routes above are relative to the `/jsonplaceholder.typicode.com` prefix. Mutating album and photo routes require a signed-in session; album mutations are restricted to the album owner. The frontend sends requests with credentials enabled so the session cookie is included.
 
+On first startup, the backend creates five demo users with three albums each and at least 15 sample photos per album. The sample photo URLs refer to images in `frontend/public/images`, which Vite serves from the frontend origin. The seed is safe to run on later startups: existing demo users, albums, and photos are reused rather than duplicated.
+
 ## Deployment notes
 
 The frontend and backend are separate projects and can be deployed independently.
@@ -170,7 +172,7 @@ Build the image from the repository root:
 docker build -t photo-gallery-backend .\backend
 ```
 
-Run it with a PostgreSQL connection string and a persistent volume for uploaded images:
+Run it with a PostgreSQL connection string:
 
 ```powershell
 docker run --name photo-gallery-backend `
@@ -178,7 +180,6 @@ docker run --name photo-gallery-backend `
   -e DATABASE_URL="jdbc:postgresql://<host>:<port>/<database>" `
   -e DB_USERNAME="<username>" `
   -e DB_PASSWORD="<password>" `
-  -v photo-gallery-uploads:/app/src/main/resources/static/images `
   photo-gallery-backend
 ```
 
@@ -191,4 +192,4 @@ Before deploying:
 3. Serve the frontend with SPA fallback routing so direct visits and refreshes on routes such as `/albums/{id}` resolve to `index.html`.
 4. Keep database credentials in the deployment environment or secret manager.
 5. Configure session cookies and CORS for the production domains. Cross-origin cookie sessions require a compatible same-site/secure cookie policy and HTTPS.
-6. Move uploaded images to persistent storage suitable for the hosting platform. The backend saves uploads under `backend/src/main/resources/static/images` and constructs image URLs using `http://localhost:8091`, which is intended for local development and should be changed for production.
+6. The demo gallery images are served by the frontend from `frontend/public/images`; the backend does not serve or store gallery image files.

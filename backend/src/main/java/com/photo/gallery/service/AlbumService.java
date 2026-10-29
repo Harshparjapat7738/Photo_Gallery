@@ -44,18 +44,14 @@ public class AlbumService {
         return albumRepo.findById(albumId).orElse(null);
     }
 
-    public Album getOwnedAlbum(String albumId, String userId) {
+    public Album getOwnedAlbum(String albumId) {
         Album album = albumRepo.findById(albumId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
-        if (!Objects.equals(album.getUserId(), userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only manage your own albums");
-        }
         return album;
     }
 
-    // Update Album
-    public Album updateAlbum(String albumId, Album updatedAlbum, String userId) {
-        Album existingAlbum = getOwnedAlbum(albumId, userId);
+    public Album updateAlbum(String albumId, Album updatedAlbum) {
+        Album existingAlbum = getOwnedAlbum(albumId);
 
         existingAlbum.setAlbumName(updatedAlbum.getAlbumName());
         existingAlbum.setDescription(updatedAlbum.getDescription());
@@ -64,8 +60,8 @@ public class AlbumService {
     }
 
     // Delete Album
-    public Album deleteAlbum(String albumId, String userId) {
-        Album album = getOwnedAlbum(albumId, userId);
+    public Album deleteAlbum(String albumId) {
+        Album album = getOwnedAlbum(albumId);
         photoRepo.deleteByAlbumId(albumId);
         albumRepo.delete(album);
         return album;
